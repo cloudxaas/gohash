@@ -1,0 +1,2 @@
+# gohash
+Golang Hash
