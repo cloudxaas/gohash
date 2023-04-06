@@ -17,7 +17,8 @@ func New(size int) *Cache {
 
 func (c *Cache) Hash(key []byte) []byte {
 	// Check if the key exists in the cache
-	if v, ok := c.cache.Get(key); ok {
+	v := c.cache.Get(key)
+	if len(v) > 0 {
 		return v
 	}
 
@@ -32,7 +33,8 @@ func (c *Cache) Hash(key []byte) []byte {
 
 func (c *Cache) HashBig(key []byte) []byte {
 	// Check if the key exists in the cache
-	if v, ok := c.cache.GetBig(key); ok {
+	v := c.cache.GetBig(key)
+	if len(v) > 0 {
 		return v
 	}
 
