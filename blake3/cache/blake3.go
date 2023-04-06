@@ -22,12 +22,12 @@ func (c *Cache) Hash(key []byte) []byte {
 	}
 
 	// Compute the Blake3 hash of the key
-  hash := blake3.Sum256(k)
+	hash := blake3.Sum256(key)
 
 	// Add the hash to the cache
-  c.cache.Set(key, hash[:])
+	c.cache.Set(key, hash[:])
 
-  return hash[:]
+	return hash[:]
 }
 
 func (c *Cache) HashBig(key []byte) []byte {
@@ -37,10 +37,10 @@ func (c *Cache) HashBig(key []byte) []byte {
 	}
 
 	// Compute the Blake3 hash of the key
-  hash := blake3.Sum256(k)
+	hash := blake3.Sum256(key)
 
 	// Add the hash to the cache
-  c.cache.SetBig(key, hash[:])
+	c.cache.SetBig(key, hash[:])
 
-  return hash[:]
+	return hash[:]
 }
