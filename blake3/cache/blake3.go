@@ -17,7 +17,7 @@ func New(size int) *Cache {
 
 func (c *Cache) Hash(key []byte) []byte {
 	// Check if the key exists in the cache
-	if v, ok := c.cache.Get(key); ok {
+	if v, ok := c.cache.GetBig(key); ok {
 		return v
 	}
 
@@ -25,7 +25,7 @@ func (c *Cache) Hash(key []byte) []byte {
   hash := blake3.Sum256(k)
 
 	// Add the hash to the cache
-  c.cache.Set(key, hash[:])
+  c.cache.SetBig(key, hash[:])
 
   return hash[:]
 }
