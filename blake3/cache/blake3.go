@@ -2,47 +2,40 @@ package blake3cache
 
 import (
 	"github.com/VictoriaMetrics/fastcache"
+	"github.com/valyala/bytebufferpool"
 	"github.com/zeebo/blake3"
 )
 
-type Cache struct {
-	cache *fastcache.Cache
+var cache *fastcache.Cache
+
+func New(cacheSize int) {
+	cache = fastcache.New(cacheSize)
 }
 
-func New(size int) *Cache {
-	return &Cache{
-		cache: fastcache.New(size),
+func Hash(key []byte) *bytebufferpool.ByteBuffer {
+	//if cache == nil {
+	//	panic("Cache is not initialized. Call InitCache() first.")
+	//}
+
+	cachedValue := cache.Get(nil, key)
+	if cachedValue != nil {
+		buf := bytebufferpool.Get()
+		buf.Write(cachedValue)
+		return buf
 	}
+
+	hasher := blake3.New()
+	hasher.Write(key)
+	hash := hasher.Sum(nil)
+
+	newValue := bytebufferpool.Get()
+	newValue.Write(hash)
+
+	cache.Set(key, newValue.B)
+
+	return newValue
 }
 
-func (c *Cache) Hash(key []byte) []byte {
-	// Check if the key exists in the cache
-	v := c.cache.Get(nil, key)
-	if len(v) > 0 {
-		return v
-	}
-
-	// Compute the Blake3 hash of the key
-	hash := blake3.Sum256(key)
-
-	// Add the hash to the cache
-	c.cache.Set(key, hash[:])
-
-	return hash[:]
-}
-
-func (c *Cache) HashBig(key []byte) []byte {
-	// Check if the key exists in the cache
-	v := c.cache.GetBig(nil, key)
-	if len(v) > 0 {
-		return v
-	}
-
-	// Compute the Blake3 hash of the key
-	hash := blake3.Sum256(key)
-
-	// Add the hash to the cache
-	c.cache.SetBig(key, hash[:])
-
-	return hash[:]
+func Release(buf *bytebufferpool.ByteBuffer) {
+	bytebufferpool.Put(buf)
 }
