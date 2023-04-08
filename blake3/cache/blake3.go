@@ -8,11 +8,14 @@ import (
 
 var cache *fastcache.Cache
 
-func New(cacheSize int) {
+type blake3s struct {}
+
+func New(cacheSize int) blake3s{
 	cache = fastcache.New(cacheSize)
+	return blake3s{}
 }
 
-func Hash(key []byte) *bytebufferpool.ByteBuffer {
+func (f blake3s) Hash(key []byte) *bytebufferpool.ByteBuffer {
 	//if cache == nil {
 	//	panic("Cache is not initialized. Call InitCache() first.")
 	//}
@@ -36,6 +39,6 @@ func Hash(key []byte) *bytebufferpool.ByteBuffer {
 	return newValue
 }
 
-func Release(buf *bytebufferpool.ByteBuffer) {
+func (f blake3s) Release(buf *bytebufferpool.ByteBuffer) {
 	bytebufferpool.Put(buf)
 }
