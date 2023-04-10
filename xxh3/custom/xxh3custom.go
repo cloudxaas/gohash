@@ -32,7 +32,9 @@ func readUint64LE(data []byte) uint64 {
 		uint64(data[6])<<48 |
 		uint64(data[7])<<56
 }
-
+func Hash(data []byte) uint64 {
+	return Hash64(data, len(data), uint64(0))
+}
 func Hash64(data []byte, length int, seed uint64) uint64 {
 	acc := [2]uint64{seed, seed}
 
