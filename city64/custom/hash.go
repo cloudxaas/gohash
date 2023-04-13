@@ -24,7 +24,11 @@ func fetch32(p []byte) uint32 {
 }
 
 func rotate(val uint64, shift int) uint64 {
-	return shift == 0 || shift == 64 ? val : ((val >> shift) | (val << (64 - shift)))
+	if shift == 0 || shift == 64 {
+	    return val
+	} else {
+	    return (val >> shift) | (val << (64 - shift))
+	}
 }
 
 func hash128to64(x [2]uint64) uint64 {
